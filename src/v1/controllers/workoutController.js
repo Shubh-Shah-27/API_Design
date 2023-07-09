@@ -1,16 +1,28 @@
 const workoutService = require("../services/workoutService");
 
 const getAllWorkouts = (req, res) => {
-  const allWorkouts = workoutService.getAllWorkouts();
-  res.send({ status: "OK", data: allWorkouts });
+  try {
+    const allWorkouts = workoutService.getAllWorkouts();
+    res.send({ status: "OK", data: allWorkouts });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const getOneWorkout = (req, res) => {
   const {
     params: { workoutId },
   } = req;
-  const workout = workoutService.getOneWorkout(workoutId);
-  res.send({ status: "OK", data: workout });
+  try {
+    const workout = workoutService.getOneWorkout(workoutId);
+    res.send({ status: "OK", data: workout });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const createNewWorkout = (req, res) => {
@@ -23,8 +35,15 @@ const createNewWorkout = (req, res) => {
     !body.trainerTips
   ) {
     console.log("Data Missing");
-    // Temporary
-    res.status(201).send({ status: "Failed"});
+    res
+      .status(400)
+      .send({
+        status: "FAILED",
+        data: {
+          error:
+            "One of the following keys is missing or is empty in request body: 'name', 'mode', 'equipment', 'exercises', 'trainerTips'",
+        },
+      });
     return;
   }
 
@@ -35,11 +54,14 @@ const createNewWorkout = (req, res) => {
     exercises: body.exercises,
     trainerTips: body.trainerTips,
   };
-  const createdWorkout = workoutService.createNewWorkout(newWorkout);
-
-  res.status(201).send({ status: "OK", data: createdWorkout });
-  // const createdWorkout = workoutService.createNewWorkout();
-  // res.send("Create a new workout");
+  try {
+    const createdWorkout = workoutService.createNewWorkout(newWorkout);
+    res.status(201).send({ status: "OK", data: createdWorkout });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const updateOneWorkout = (req, res) => {
@@ -47,8 +69,15 @@ const updateOneWorkout = (req, res) => {
     body,
     params: { workoutId },
   } = req;
-  const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
-  res.status(200).send({ status: "OK", data: updatedWorkout });
+
+  try {
+    const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
+    res.send({ status: "OK", data: updatedWorkout });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .send({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const deleteOneWorkout = (req, res) => {
@@ -57,9 +86,15 @@ const deleteOneWorkout = (req, res) => {
     params: { workoutId },
   } = req;
 
-  const deletedWorkout = workoutService.deleteOneWorkout(workoutId, body);
-  console.log("In Controller: "+deletedWorkout);
-  res.status(200).send({ status: "OK" , deletedWorkout: deletedWorkout });
+try {
+    const deletedWorkout = workoutService.deleteOneWorkout(workoutId, body);
+    console.log("In Controller: "+deletedWorkout);
+    res.status(200).send({ status: "OK" , deletedWorkout: deletedWorkout });
+} catch (error) {
+  res
+  .status(error?.status || 500)
+  .send({ status: "FAILED", data: { error: error?.message || error } });
+}
 };
 
 module.exports = {

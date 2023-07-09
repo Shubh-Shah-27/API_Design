@@ -3,19 +3,21 @@ const { v4: uuid } = require("uuid");
 
 
 const getAllWorkouts = () => {
+  try {
     const allWorkouts = workout.getAllWorkouts();
     return allWorkouts;
+  } catch (error) {
+    throw error;
+  }
   };
   
   const getOneWorkout = (workoutId) => {
-    const currentWorkout = workout.getOneWorkout(workoutId);
-    if(currentWorkout == false)
-    {
-      console.log("ID not Found");
-      return;
+    try {
+          const currentWorkout = workout.getOneWorkout(workoutId);
+          return currentWorkout;
+    } catch (error) {
+      throw error;
     }
-    else
-    return currentWorkout;
   };
   
   const createNewWorkout = (newWorkout) => {
@@ -27,26 +29,29 @@ const getAllWorkouts = () => {
       createdAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
       updatedAt: new Date().toLocaleString("en-US", { timeZone: "UTC" }),
     };
-    const createdWorkout = workout.createNewWorkout(workoutToInsert);
-    return createdWorkout;
+    try {
+      const createdWorkout = workout.createNewWorkout(workoutToInsert);
+      return createdWorkout;
+    } catch (error) {
+      throw error;
+    }
   };
   
   const updateOneWorkout = (workoutId, changes) => {
-    const updatedWorkout = workout.updateOneWorkout(workoutId, changes);
-    return updatedWorkout;
+    try {
+      const updatedWorkout = workout.updateOneWorkout(workoutId, changes);
+      return updatedWorkout;
+    } catch (error) {
+      throw error;
+    }
   };
   
   const deleteOneWorkout = (workoutId) => {
-      const deletedWorkout = workout.deleteOneWorkout(workoutId);
-      if(deletedWorkout == false)
-      {
-        console.log("In Service: ID not Found");
-        return;
-      }
-      else
-      {
-        console.log("In Service: "+deletedWorkout);
+      try {
+        const deletedWorkout = workout.deleteOneWorkout(workoutId);
         return deletedWorkout;
+      } catch (error) {
+        throw error;
       }
   };
   
